@@ -10,16 +10,18 @@ class CameraHandler:
         if not self.cam.isOpened():
             print("error in opening camera")
         else:
-            loop_switch =True
-            while loop_switch:
-                frame_capture_sucess,frame =  self.cam.read()
-                if not frame_capture_sucess:
-                    print("issue in camera_utils capturing video frame")
-                    loop_switch =False
-                cv2.imshow('Video Feed', frame)                 
-                if cv2.waitKey(1) & 0xFF == ord('q'): # Press 'q' to quit
-                   self.release_camera()
-                   break
+            frame_capture_sucess,frame =  self.cam.read()
+            if not frame_capture_sucess:
+                print("issue in camera_utils capturing video frame")
+                return None          
+            if cv2.waitKey(1) & 0xFF == ord('q'): # Press 'q' to quit
+                self.release_camera()
+                return "quit"
+            return frame
+
+    def display_frame(self,frame,window_name="video feed"):
+        cv2.imshow(window_name,frame)
+        
     def release_camera(self,key_press_time=0):
         self.cam.release()
         cv2.waitKey(key_press_time)
